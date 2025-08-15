@@ -8,7 +8,7 @@ def clear(frame):
 def caesar():
     clear(mainframe)
 
-    ctk.CTkLabel(mainframe, text="Caesar Chiper", font=ctk.CTkFont(weight="bold", size=18)).place(x=275, y=100)
+    ctk.CTkLabel(mainframe, text="Caesar Chiper", font=ctk.CTkFont(weight="bold", size=18)).place(x=250, y=100)
     
     ctk.CTkLabel(mainframe, text="Plain Text", font=ctk.CTkFont(weight="bold", size=12)).place(x=100, y=150)
     plaintext = ctk.CTkEntry(mainframe, width=300, placeholder_text="Plain Text")
@@ -63,7 +63,7 @@ def caesar():
 def atbash():
     clear(mainframe)
     
-    ctk.CTkLabel(mainframe, text="Atbash Cipher", font=ctk.CTkFont(weight="bold", size=18)).place(x=275, y=100)
+    ctk.CTkLabel(mainframe, text="Atbash Cipher", font=ctk.CTkFont(weight="bold", size=18)).place(x=250, y=100)
 
     ctk.CTkLabel(mainframe, text="Plain Text", font=ctk.CTkFont(weight="bold", size=12)).place(x=100, y=150)
     plaintext = ctk.CTkEntry(mainframe, width=300, placeholder_text="Plain Text")
@@ -97,6 +97,65 @@ def atbash():
 
     ctk.CTkButton(mainframe, text="Decode", font=ctk.CTkFont(weight="bold"), command=show_text).place(x=355, y=200)
 
+
+def subtitution():
+    clear(mainframe)
+
+    ctk.CTkLabel(mainframe, text="Substitution Cipher", font=ctk.CTkFont(weight="bold", size=18)).place(x=250, y=100)
+    
+    ctk.CTkLabel(mainframe, text="Plain Text", font=ctk.CTkFont(weight="bold", size=12)).place(x=100, y=150)
+    plaintext = ctk.CTkEntry(mainframe, width=300, placeholder_text="Plain Text")
+    plaintext.place(x=200, y=150)
+
+    ctk.CTkLabel(mainframe, text="Key", font=ctk.CTkFont(weight="bold", size=12)).place(x=100, y=200)
+    keytext = ctk.CTkEntry(mainframe, width=300, placeholder_text="Key")
+    keytext.place(x=200, y=200)
+
+    ctk.CTkLabel(mainframe, text="Cipher Text", font=ctk.CTkFont(weight="bold", size=12)).place(x=100, y=300)
+    chipertextoutput = ctk.CTkEntry(mainframe, width=300)
+    chipertextoutput.place(x=200, y=300)
+
+    def show_text(mode):
+        plain = plaintext.get()
+        key = keytext.get()
+
+        if not plain.isalpha():
+            plaintext.configure(text_color="red", state="normal") 
+            plaintext.delete(0, "end")
+            plaintext.insert(0, "[ERROR] Please input alphabet text")
+            return
+        else:
+            plaintext.configure(text_color="white", state="normal")
+            plain = plain.lower()
+
+        if len(key) != 26 or not key.isalpha():
+            keytext.configure(text_color="red", state="normal") 
+            keytext.delete(0, "end")
+            keytext.insert(0, "[ERROR] Please input 26 alphabet letters")
+            return
+        else:
+            keytext.configure(text_color="white", state="normal")
+            key = key.lower()
+
+        alphabetlower = list("abcdefghijklmnopqrstuvwxyz")
+        keylist = list(key)
+        mapping_lower_case_encode = {alphabetlower[i]: keylist[i] for i in range(26)}
+        mapping_lower_case_decode = {keylist[i]: alphabetlower[i]  for i in range(26)}
+        substitute = ""
+        if mode == "encode":
+            for char in plain:
+                substitute += mapping_lower_case_encode.get(char, char)
+        elif mode == "decode":
+            for char in plain:
+                substitute += mapping_lower_case_decode.get(char, char)
+
+        chipertextoutput.configure(text_color="white", state="normal")
+        chipertextoutput.delete(0, "end")
+        chipertextoutput.insert(0, substitute)
+        chipertextoutput.configure(state="readonly")
+
+    ctk.CTkButton(mainframe, text="Encode", font=ctk.CTkFont(weight="bold"), command=lambda: show_text("encode")).place(x=200, y=250)
+    ctk.CTkButton(mainframe, text="Decode", font=ctk.CTkFont(weight="bold"), command=lambda: show_text("decode")).place(x=355, y=250)
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -134,6 +193,17 @@ atbash = ctk.CTkButton(sidebar,
                      height=40,
                      command=atbash)
 atbash.pack()
+
+subtitution = ctk.CTkButton(sidebar,
+                     text="Subtitution",
+                     fg_color="#303030",
+                     hover_color="#454545",
+                     font= ctk.CTkFont(size= 12, weight="bold"),
+                     corner_radius=0,
+                     anchor="center",
+                     height=40,
+                     command=subtitution)
+subtitution.pack()
 
 
 
